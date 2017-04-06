@@ -73,6 +73,7 @@ router.route('/')
     })
   });
 
+
 router.route('/:user_id')
     .get((req, res) => { 
       User.findOne({ _id: req.params.user_id }, (err, user) => {

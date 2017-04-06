@@ -6,6 +6,8 @@ var mongoose    = require('mongoose');
 var api         = require('./routes/api');
 var configDB    = require('./config.js');
 var app         = express();
+var Users       = require('./controllers/controlUsers');
+var login       = require('./controllers/login');
 
 // Heroku
 if(process.env.NODE_ENV !== 'production') {
@@ -29,14 +31,19 @@ app.use(bodyParser.json());
 //Mongoose
 mongoose.connect(configDB.dbUrl);
 var db = mongoose.connection;
-
 db.on('error', console.error.bind(console, 'connection error:'))
-/*
-app.get('*', function (request, response){
-  response.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
+
+app.get('*', function (req, res){
+  res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
 });
-*/
+
 app.use('/api', api); 
+app.route('/create').post(Users.post);
+
+
+app.route('/auth')
+    .get(login.get)
+    .post(login.post);
 
 //Port
 app.listen(PORT, error => {
