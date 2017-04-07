@@ -7,8 +7,8 @@ export default class Auth extends React.Component {
             <div>
                 <h1>Authentification</h1>
                 <form method="post" action='/auth'>
-                    <input type='text' placeholder='Pseudo' />
-                    <input type='password' placeholder='Mot de passe' />
+                    <input type='text' name='pseudo' placeholder='Pseudo' />
+                    <input type='password' name='password' placeholder='Mot de passe' />
                     <button type='submit'>S'identifier</button>
                 </form>
             </div>

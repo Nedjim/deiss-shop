@@ -15,11 +15,14 @@ const post = (req, res) => {
     user.pseudo = req.body.pseudo;
     user.email = req.body.email;
     user.password = req.body.password;
+
     user.save((err) => {
       if(err){
         res.send(err);
       }
-      res.send({ message: 'User created' });
+      //res.send({ message: 'User created' });
+      req.session.userId = user._id; 
+      return res.redirect('profile'); 
     })
 }
 

@@ -1,13 +1,19 @@
-var PORT        = process.env.PORT || 8080;
-var path        = require('path');
-var express     = require('express');
-var bodyParser  = require('body-parser');
-var mongoose    = require('mongoose');
-var api         = require('./routes/api');
-var configDB    = require('./config.js');
-var app         = express();
-var Users       = require('./controllers/controlUsers');
-var login       = require('./controllers/login');
+var PORT              = process.env.PORT || 8080;
+var path              = require('path');
+var express           = require('express');
+var bodyParser        = require('body-parser');
+var mongoose          = require('mongoose');
+
+var cookieParser      = require('cookie-parser');
+var session           = require('express-session');
+
+
+var api               = require('./routes/api');
+var configDB          = require('./config.js');
+var app               = express();
+var Users             = require('./controllers/controlUsers');
+var auth              = require('./controllers/auth');
+var profile           = require('./controllers/profile');
 
 // Heroku
 if(process.env.NODE_ENV !== 'production') {
@@ -27,6 +33,13 @@ app.use(express.static(path.join(__dirname, 'dist')));
 // Application 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(session({
+    secret: "test", 
+    resave: false, 
+    saveUninitialized: true, 
+    cookie: { secure: true }
+}));
 
 //Mongoose
 mongoose.connect(configDB.dbUrl);
@@ -42,8 +55,11 @@ app.route('/create').post(Users.post);
 
 
 app.route('/auth')
-    .get(login.get)
-    .post(login.post);
+    .get(auth.get)
+    .post(auth.post);
+
+app.route('/profile')
+    .get(profile.get)
 
 //Port
 app.listen(PORT, error => {
