@@ -31,20 +31,20 @@ UserSchema.statics.authenticate =  (pseudo, password, callback) => {
                 return callback(err); 
             }
             return callback(null, user);
-           /* bcrypt.compare(password, user.password, (err, result) => {
+           bcrypt.compare(password, user.password, (err, result) => {
                 if(result === true){
                     return callback(null, user)
                 } 
                 else {
                     return callback()
                 }
-            })*/
+            })
        })
 }
 //Hash password
 /*UserSchema.pre('save', next => {
     var user = this;
-    bcrypt.hash(user.password, 10, (err, hash) => {
+    bcrypt.hash(user.password, 10, function(err, hash) {
         if(err){
             return next(err);
         }

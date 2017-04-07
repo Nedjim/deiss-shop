@@ -8,7 +8,7 @@ var cookieParser      = require('cookie-parser');
 var session           = require('express-session');
 
 
-var api               = require('./routes/api');
+//var api               = require('./routes/api');
 var configDB          = require('./config.js');
 var app               = express();
 var Users             = require('./controllers/controlUsers');
@@ -27,6 +27,15 @@ if(process.env.NODE_ENV !== 'production') {
   app.use(webpackHotMiddleware(compiler));
 }
 
+// Enable CORS from client-side
+app.use(function(req, res, next) {  
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Credentials");
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
 // Dossier static
 app.use(express.static(path.join(__dirname, 'dist')));
 
@@ -34,11 +43,12 @@ app.use(express.static(path.join(__dirname, 'dist')));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
+
 app.use(session({
     secret: "test", 
     resave: false, 
     saveUninitialized: true, 
-    cookie: { secure: true }
+    cookie: { secure: true, httpOnly: false }
 }));
 
 //Mongoose
@@ -50,9 +60,7 @@ app.get('*', function (req, res){
   res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
 });
 
-app.use('/api', api); 
 app.route('/create').post(Users.post);
-
 
 app.route('/auth')
     .get(auth.get)

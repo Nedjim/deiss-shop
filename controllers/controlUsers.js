@@ -20,9 +20,8 @@ const post = (req, res) => {
       if(err){
         res.send(err);
       }
-      //res.send({ message: 'User created' });
       req.session.userId = user._id; 
-      return res.redirect('profile'); 
+      return res.redirect('/profile'); 
     })
 }
 

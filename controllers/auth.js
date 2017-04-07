@@ -23,7 +23,8 @@ const post = (req, res, next) => {
                 return next(error);
             }
             else {
-                req.session.userId = user._id;
+                req.session.user = user;
+                res.cookie('user', req.session.user)
                 return res.redirect('/profile');
           }
      })
